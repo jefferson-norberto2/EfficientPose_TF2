@@ -581,4 +581,3 @@ if __name__ == "__main__":
     test_gen = LineModGenerator("/Datasets/Linemod_preprocessed/", object_id = 1, train = False)
     
     img, anno = train_gen[0]
-    

@@ -73,20 +73,20 @@ def focal(alpha=0.25, gamma=1.5):
         classification = y_pred
 
         # filter out "ignore" anchors
-        indices = tf.where(keras.backend.not_equal(anchor_state, -1))
+        indices = tf.compat.v1.where(keras.backend.not_equal(anchor_state, -1))
         labels = tf.gather_nd(labels, indices)
         classification = tf.gather_nd(classification, indices)
 
         # compute the focal loss
         alpha_factor = keras.backend.ones_like(labels) * alpha
-        alpha_factor = tf.where(keras.backend.equal(labels, 1), alpha_factor, 1 - alpha_factor)
+        alpha_factor = tf.compat.v1.where(keras.backend.equal(labels, 1), alpha_factor, 1 - alpha_factor)
         # (1 - 0.99) ** 2 = 1e-4, (1 - 0.9) ** 2 = 1e-2
-        focal_weight = tf.where(keras.backend.equal(labels, 1), 1 - classification, classification)
+        focal_weight = tf.compat.v1.where(keras.backend.equal(labels, 1), 1 - classification, classification)
         focal_weight = alpha_factor * focal_weight ** gamma
         cls_loss = focal_weight * keras.backend.binary_crossentropy(labels, classification)
 
         # compute the normalizer: the number of positive anchors
-        normalizer = tf.where(keras.backend.equal(anchor_state, 1))
+        normalizer = tf.compat.v1.where(keras.backend.equal(anchor_state, 1))
         normalizer = keras.backend.cast(keras.backend.shape(normalizer)[0], keras.backend.floatx())
         normalizer = keras.backend.maximum(keras.backend.cast_to_floatx(1.0), normalizer)
 
@@ -119,7 +119,7 @@ def smooth_l1(sigma=3.0):
         anchor_state = y_true[:, :, -1]
 
         # filter out "ignore" anchors
-        indices = tf.where(keras.backend.equal(anchor_state, 1))
+        indices = tf.compat.v1.where(keras.backend.equal(anchor_state, 1))
         regression = tf.gather_nd(regression, indices)
         regression_target = tf.gather_nd(regression_target, indices)
 
@@ -128,7 +128,7 @@ def smooth_l1(sigma=3.0):
         #        |x| - 0.5 / sigma / sigma    otherwise
         regression_diff = regression - regression_target
         regression_diff = keras.backend.abs(regression_diff)
-        regression_loss = tf.where(
+        regression_loss = tf.compat.v1.where(
             keras.backend.less(regression_diff, 1.0 / sigma_squared),
             0.5 * sigma_squared * keras.backend.pow(regression_diff, 2),
             regression_diff - 0.5 / sigma_squared
@@ -177,7 +177,7 @@ def transformation_loss(model_3d_points_np, num_rotation_parameter):
         anchor_state      = tf.cast(tf.math.round(y_true[:, :, -1]), tf.int32)
     
         # filter out "ignore" anchors
-        indices           = tf.where(tf.equal(anchor_state, 1))
+        indices           = tf.compat.v1.where(tf.equal(anchor_state, 1))
         regression_rotation = tf.gather_nd(regression_rotation, indices) * math.pi
         regression_translation = tf.gather_nd(regression_translation, indices)
         
@@ -208,8 +208,8 @@ def transformation_loss(model_3d_points_np, num_rotation_parameter):
         transformed_points_target = rotate(selected_model_points, axis_target, angle_target) + regression_target_translation
         
         #distinct between symmetric and asymmetric objects
-        sym_indices = tf.where(keras.backend.equal(is_symmetric, 1))
-        asym_indices = tf.where(keras.backend.not_equal(is_symmetric, 1))
+        sym_indices = tf.compat.v1.where(keras.backend.equal(is_symmetric, 1))
+        asym_indices = tf.compat.v1.where(keras.backend.not_equal(is_symmetric, 1))
         
         sym_points_pred = tf.reshape(tf.gather_nd(transformed_points_pred, sym_indices), (-1, num_points, 3))
         asym_points_pred = tf.reshape(tf.gather_nd(transformed_points_pred, asym_indices), (-1, num_points, 3))
@@ -225,7 +225,7 @@ def transformation_loss(model_3d_points_np, num_rotation_parameter):
         
         loss = tf.math.reduce_mean(distances)
         #in case of no annotations the loss is nan => replace with zero
-        loss = tf.where(tf.math.is_nan(loss), tf.zeros_like(loss), loss)
+        loss = tf.compat.v1.where(tf.math.is_nan(loss), tf.zeros_like(loss), loss)
         
         return loss
         

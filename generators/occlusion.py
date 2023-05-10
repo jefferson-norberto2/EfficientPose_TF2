@@ -668,4 +668,3 @@ if __name__ == "__main__":
         img, anno = train_gen[0]
     # img, anno = test_gen[0]
     
-    

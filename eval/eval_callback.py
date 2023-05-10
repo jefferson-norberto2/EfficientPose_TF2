@@ -237,7 +237,7 @@ class Evaluate(keras.callbacks.Callback):
 
         if self.tensorboard is not None:
             if tf.version.VERSION < '2.0.0' and self.tensorboard.writer is not None:
-                summary = tf.Summary()
+                summary = tf.compat.v1.Summary()
                 #mAP
                 summary_value_map = summary.value.add()
                 summary_value_map.simple_value = self.mean_ap
@@ -304,23 +304,23 @@ class Evaluate(keras.callbacks.Callback):
                 
                 self.tensorboard.writer.add_summary(summary, epoch)
             else:
-                tf.summary.scalar('mAP', self.mean_ap, epoch)
-                tf.summary.scalar("ADD", self.mean_add, epoch)
-                tf.summary.scalar("ADD-S", self.mean_add_s, epoch)
-                tf.summary.scalar("5cm_5degree", self.mean_5cm_5degree, epoch)
-                tf.summary.scalar("TranslationErrorMean_in_mm", self.mean_translation_mean, epoch)
-                tf.summary.scalar("TranslationErrorStd_in_mm", self.mean_translation_std, epoch)
-                tf.summary.scalar("RotationErrorMean_in_degree", self.mean_rotation_mean, epoch)
-                tf.summary.scalar("RotationErrorStd_in_degree", self.mean_rotation_std, epoch)
-                tf.summary.scalar("2D_Projection", self.mean_2d_projection, epoch)
-                tf.summary.scalar("Summed_Translation_Rotation_Error", self.mean_translation_mean + self.mean_translation_std + self.mean_rotation_mean + self.mean_rotation_std, epoch)
-                tf.summary.scalar("ADD(-S)", self.mean_mixed_add_and_add_s_metric, epoch)
-                tf.summary.scalar("AverageSymmetricPointDistanceMean_in_mm", self.mean_transformed_sym_mean, epoch)
-                tf.summary.scalar("AverageSymmetricPointDistanceStd_in_mm", self.mean_transformed_sym_std, epoch)
-                tf.summary.scalar("AveragePointDistanceMean_in_mm", self.mean_transformed_mean, epoch)
-                tf.summary.scalar("AveragePointDistanceStd_in_mm", self.mean_transformed_std, epoch)
-                tf.summary.scalar("MixedAveragePointDistanceMean_in_mm", self.mean_mixed_transformed_mean, epoch)
-                tf.summary.scalar("MixedAveragePointDistanceStd_in_mm", self.mean_mixed_transformed_std, epoch)
+                tf.compat.v1.summary.scalar('mAP', self.mean_ap, epoch)
+                tf.compat.v1.summary.scalar("ADD", self.mean_add, epoch)
+                tf.compat.v1.summary.scalar("ADD-S", self.mean_add_s, epoch)
+                tf.compat.v1.summary.scalar("5cm_5degree", self.mean_5cm_5degree, epoch)
+                tf.compat.v1.summary.scalar("TranslationErrorMean_in_mm", self.mean_translation_mean, epoch)
+                tf.compat.v1.summary.scalar("TranslationErrorStd_in_mm", self.mean_translation_std, epoch)
+                tf.compat.v1.summary.scalar("RotationErrorMean_in_degree", self.mean_rotation_mean, epoch)
+                tf.compat.v1.summary.scalar("RotationErrorStd_in_degree", self.mean_rotation_std, epoch)
+                tf.compat.v1.summary.scalar("2D_Projection", self.mean_2d_projection, epoch)
+                tf.compat.v1.summary.scalar("Summed_Translation_Rotation_Error", self.mean_translation_mean + self.mean_translation_std + self.mean_rotation_mean + self.mean_rotation_std, epoch)
+                tf.compat.v1.summary.scalar("ADD(-S)", self.mean_mixed_add_and_add_s_metric, epoch)
+                tf.compat.v1.summary.scalar("AverageSymmetricPointDistanceMean_in_mm", self.mean_transformed_sym_mean, epoch)
+                tf.compat.v1.summary.scalar("AverageSymmetricPointDistanceStd_in_mm", self.mean_transformed_sym_std, epoch)
+                tf.compat.v1.summary.scalar("AveragePointDistanceMean_in_mm", self.mean_transformed_mean, epoch)
+                tf.compat.v1.summary.scalar("AveragePointDistanceStd_in_mm", self.mean_transformed_std, epoch)
+                tf.compat.v1.summary.scalar("MixedAveragePointDistanceMean_in_mm", self.mean_mixed_transformed_mean, epoch)
+                tf.compat.v1.summary.scalar("MixedAveragePointDistanceStd_in_mm", self.mean_mixed_transformed_std, epoch)
 
         logs['mAP'] = self.mean_ap
         logs['ADD'] = self.mean_add

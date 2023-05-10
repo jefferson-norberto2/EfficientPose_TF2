@@ -295,7 +295,7 @@ def filter_detections(
     def _filter_detections(scores_, labels_):
         # threshold based on score
         # (num_score_keeps, 1)
-        indices_ = tf.where(keras.backend.greater(scores_, score_threshold))
+        indices_ = tf.compat.v1.where(keras.backend.greater(scores_, score_threshold))
 
         if nms:
             # (num_score_keeps, 4)

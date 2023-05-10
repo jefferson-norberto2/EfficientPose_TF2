@@ -129,9 +129,9 @@ def allow_gpu_growth_memory():
         Set allow growth GPU memory to true
 
     """
-    config = tf.ConfigProto()
+    config = tf.compat.v1.ConfigProto()
     config.gpu_options.allow_growth = True
-    _ = tf.Session(config = config)
+    _ = tf.compat.v1.Session(config = config)
     
     
 def create_generators(args):
